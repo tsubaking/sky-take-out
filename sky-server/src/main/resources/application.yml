@@ -21,6 +21,7 @@ mybatis:
     #开启驼峰命名
     map-underscore-to-camel-case: true
 
+#日志配置
 logging:
   level:
     com:
@@ -28,6 +29,14 @@ logging:
         mapper: debug
         service: info
         controller: info
+  file:
+    name: ./logs/my.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      total-size-cap: 10GB
+      max-history: 60
+      file-name-pattern: "${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz"
 
 sky:
   jwt:
