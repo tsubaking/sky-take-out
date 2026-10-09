@@ -17,6 +17,7 @@
         <module>sky-pojo</module>
         <module>sky-server</module>
     </modules>
+<!--    jdk版本最高可支持jdk17-->
     <properties>
         <mybatis.spring>2.2.0</mybatis.spring>
         <lombok>1.18.30</lombok>
@@ -124,18 +125,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <version>3.11.0</version> &lt;!&ndash; 使用较新版本以更好支持高版本JDK &ndash;&gt;-->
-<!--                <configuration>-->
-<!--                    <source>21</source>-->
-<!--                    <target>21</target>-->
-<!--                    &lt;!&ndash; 或者使用 <release>21</release> &ndash;&gt;-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 </project>
