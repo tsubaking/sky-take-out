@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Schema(description = "提交的员工数据")
 public class EmployeeDTO implements Serializable {
 
-    @Schema(description = "主键id" ,required = false)
+    @Schema(description = "主键id",example = "2")
     private Long id;
 
     @Schema(description = "用户名（不可重复）" ,example = "thsubaking",required = true)
