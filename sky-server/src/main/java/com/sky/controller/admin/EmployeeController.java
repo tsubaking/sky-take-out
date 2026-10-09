@@ -110,4 +110,23 @@ public class EmployeeController {
         PageResult pageResult = employeeService.pageQuery(dto);
         return Result.success(pageResult);
     }
+
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @Operation(summary = "修改员工账号状态")
+    public Result status(
+            @Parameter(description = "账号状态值，1为启用，0为禁用")
+            @PathVariable("status") int status,
+            @RequestParam("id")
+            @Parameter(description = "账号id")
+            long id) {
+        log.info("启用禁用员工账号：{},{}",status,id);
+        employeeService.startOrStop(status,id);
+        return Result.success();
+    }
 }
