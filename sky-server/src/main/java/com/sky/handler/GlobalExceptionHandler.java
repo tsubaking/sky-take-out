@@ -1,6 +1,7 @@
 package com.sky.handler;
 
 import com.sky.constant.MessageConstant;
+import com.sky.exception.AspectException;
 import com.sky.exception.BaseException;
 import com.sky.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -45,5 +46,13 @@ public class GlobalExceptionHandler {
         } else {
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
+    }
+    /**
+     * 自定义的切面异常
+     * */
+    @ExceptionHandler(AspectException.class)
+    public Result aspectException(AspectException ex) {
+        log.error("异常信息：{}", ex.getMessage());
+        return Result.error(ex.getMessage());
     }
 }

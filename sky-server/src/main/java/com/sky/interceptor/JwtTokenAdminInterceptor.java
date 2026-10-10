@@ -60,4 +60,13 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             return false;
         }
     }
+
+    /**
+     * 一次请求是一个线程，请求调对应的controller调用结束后，释放ThreadLocal内的资源
+     * 防止内存泄露
+     * */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        BaseContext.removeCurrentId();
+    }
 }

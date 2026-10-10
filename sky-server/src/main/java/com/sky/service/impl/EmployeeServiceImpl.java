@@ -76,8 +76,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         //默认密码
         String pwd = DigestUtils.md5DigestAsHex("123456".getBytes());
         employee.setPassword(pwd);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        //employee.setCreateTime(LocalDateTime.now());
+        //employee.setUpdateTime(LocalDateTime.now());
         //设置账号的状态，默认正常状态 1表示正常 0表示锁定
         employee.setStatus(StatusConstant.ENABLE);
 
@@ -85,8 +85,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         //employee.setCreateUser(10L);//目前写个假数据，后期修改
         //employee.setUpdateUser(10L);
         //设置当前记录创建人id和修改人id
-        employee.setCreateUser(BaseContext.getCurrentId());//获取ThreadLocal内保存的当前会话的修改人ID
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        //employee.setCreateUser(BaseContext.getCurrentId());//获取ThreadLocal内保存的当前会话的修改人ID
+        //employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);//后续步骤定义
 
@@ -135,8 +135,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        //employee.setUpdateTime(LocalDateTime.now());
+        //employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.update(employee);
     }
