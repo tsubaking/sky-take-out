@@ -7,6 +7,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,9 +19,10 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@Tag(name = "菜品相关接口")
+//@Tag(name = "菜品管理",description = "菜品管理相关接口")
 @RequestMapping("/admin/dish")
 @Slf4j
+@Api(tags = "菜品管理接口")
 public class DishController {
 
 

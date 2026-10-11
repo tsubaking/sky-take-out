@@ -25,4 +25,10 @@ public interface SetmealMapper {
     //插入新的套餐数据
     @AutoFill(OperationType.INSERT)
     void insert(Setmeal setmeal);
+
+    /**
+     * 根据套餐id查询套餐信息
+     * */
+    @Select("select * from setmeal where id = #{id}")
+    Setmeal selectById(Long id);
 }
