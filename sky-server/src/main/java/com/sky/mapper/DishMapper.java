@@ -9,6 +9,7 @@ import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Service;
 
 @Mapper
@@ -48,4 +49,7 @@ public interface DishMapper {
     void deleteById(Long id);
 
 
+    //根据id更新菜品数据
+    @AutoFill(OperationType.UPDATE)
+    void update(Dish dish);
 }
