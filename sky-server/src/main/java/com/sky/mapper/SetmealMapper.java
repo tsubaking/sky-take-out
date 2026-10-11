@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.entity.Setmeal;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,4 +15,6 @@ public interface SetmealMapper {
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
 
+    //根据套餐id更新套餐的非空字段
+    void update(Setmeal setmeal);
 }

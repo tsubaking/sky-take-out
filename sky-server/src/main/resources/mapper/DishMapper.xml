@@ -20,6 +20,8 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateUser != null">update_user = #{updateUser},</if>
         </set>
+        where
+          id = #{id}
     </update>
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         select d.* , c.name as categoryName from dish d left outer join category c on d.category_id = c.id

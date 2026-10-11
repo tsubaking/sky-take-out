@@ -8,6 +8,7 @@ import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -84,6 +85,11 @@ public class DishController {
      * @param dishDTO
      * @return
      */
+    /*
+    严格按 REST 设计时：POST 用于创建/非幂等处理，PUT 用于指定 URI 的完整创建或替换。
+    PUT 幂等：因为它是“把指定 URI 的资源替换成请求体状态”，像赋值，重复执行最终状态不变。
+    POST 不承诺幂等：因为它是“提交给服务器处理”，服务器可能创建新资源、追加记录或执行动作，重复执行可能产生多次副作用。
+    * */
     @PutMapping
     @Operation(description = "修改菜品信息")
     public Result update(DishDTO dishDTO) {
@@ -92,6 +98,25 @@ public class DishController {
 
         dishService.updateWithFlavor(dishDTO);
 
+        return Result.success();
+    }
+
+    /**
+     * 菜品起售停售
+     * */
+    //起售停售是是“提交给服务器处理”，应该是post请求
+    @PostMapping("/status/{status}")
+    @Operation(description = "菜品起售停售")
+    public Result status(@PathVariable("status")
+                             @Parameter(description = "菜品状态,1起售，0停售",example = "1")
+                             Integer status,
+                         @RequestParam("id")
+                         @Parameter(description = "菜品id",example = "1")
+                         Long id
+                         ) {
+
+        log.info("{}号菜品起售停售修改：{}",id,status);
+        dishService.modifyStatusById(id,status);
         return Result.success();
     }
 }
