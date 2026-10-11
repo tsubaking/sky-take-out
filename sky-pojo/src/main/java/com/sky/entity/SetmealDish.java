@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 套餐菜品关系
+ * 套餐菜品关系表的entity：
+ * 套餐和菜品的关系：多对多
+ *  所以，采用第三张表关系表来维护两张表的关系
  */
 @Data
 @Builder

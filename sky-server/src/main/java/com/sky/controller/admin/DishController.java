@@ -119,4 +119,15 @@ public class DishController {
         dishService.modifyStatusById(id,status);
         return Result.success();
     }
+
+    /**
+     * 根据分类id查询菜品
+     * */
+    @GetMapping("/list")
+    @Operation(description = "根据分类查询菜品")
+    public Result<List<Dish>> getDishListByCategoryId(@RequestParam Long categoryId) {
+        log.info("根据分类id{}查询菜品",categoryId);
+        List<Dish> list = dishService.modifyStatusById(categoryId);
+        return Result.success(list);
+    }
 }

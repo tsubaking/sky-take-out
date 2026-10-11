@@ -12,6 +12,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -52,4 +54,9 @@ public interface DishMapper {
     //根据id更新菜品数据
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
+
+    /**
+     * 根据分类id查询菜品
+     * */
+    List<Dish> selectByCategoryId(Long categoryId);
 }
