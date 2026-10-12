@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -118,6 +120,36 @@ public class SetmealServiceImpl implements SetmealService {
         PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
         Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
         return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    /**
+     * 修改套餐信息
+     * @param setmealDTO
+     * @return
+     */
+    @Transactional
+    @Override
+    public void updateSetmealWithDish(SetmealDTO setmealDTO) {
+
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.update(setmeal);
+
+        //再更新套餐餐品关系
+        //把原来的删了
+        List<Long> ids = new ArrayList<>();
+        Long setmealId = setmeal.getId();
+        ids.add(setmealId);
+        setmealDishMapper.deleteBatchBySetmealId(ids);
+        //插入新的
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        if(setmealDishes != null && setmealDishes.size()>0) {
+            for (SetmealDish setmealDish : setmealDishes) {
+                setmealDish.setSetmealId(setmealId);
+            }
+        }
+        setmealDishMapper.insertList(setmealDishes);
+
     }
 
 

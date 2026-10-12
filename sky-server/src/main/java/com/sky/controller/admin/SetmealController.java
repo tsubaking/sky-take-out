@@ -96,4 +96,17 @@ public class SetmealController {
 
         return Result.success(pageResult);
     }
+
+    /**
+     * 修改套餐（套餐数据内含有菜品信息）
+     * @Param SetmealDTO
+     * @return
+     * */
+    @PutMapping
+    @Operation(description = "修改套餐")
+    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO) {
+        log.info("修改套餐：{}",setmealDTO);
+        setmealService.updateSetmealWithDish(setmealDTO);
+        return Result.success();
+    }
 }
