@@ -22,4 +22,11 @@ public interface SetmealService {
      * @param ids
      */
     void deleteBatch(List<Long> ids);
+
+    /**
+     * 根据id修改套餐状态
+     * @param id
+     * @param status
+     */
+    void changeStatus(long id, int status);
 }

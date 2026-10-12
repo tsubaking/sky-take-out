@@ -65,4 +65,19 @@ public class SetmealController {
 
         return Result.success();
     }
+
+    /**
+     * 套餐起售停售状态修改，1标识起售，0标识停售
+     * @param status
+     * @return
+     */
+    @Operation(description = "修改套餐状态，1起售，0停售")
+    @PostMapping("/status/{status}")
+    public Result changeStatus(@PathVariable("status") int status,@RequestParam long id) {
+
+        log.info("{}套餐起售停售状态修改：{}",id,status);
+
+        setmealService.changeStatus(id,status);
+        return Result.success();
+    }
 }

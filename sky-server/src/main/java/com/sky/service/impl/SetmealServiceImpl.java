@@ -79,4 +79,19 @@ public class SetmealServiceImpl implements SetmealService {
 
         setmealDishMapper.deleteBatchBySetmealId(ids);
     }
+
+    /**
+     * 根据套餐id修改套餐状态1起售，0停售
+     * @param id
+     * @param status
+     */
+    @Override
+    public void changeStatus(long id, int status) {
+
+        Setmeal setmeal = Setmeal.builder()
+                .id(id)
+                .status(status)
+                .build();
+        setmealMapper.update(setmeal);
+    }
 }
