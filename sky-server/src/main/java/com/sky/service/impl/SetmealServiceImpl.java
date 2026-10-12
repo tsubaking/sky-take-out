@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.dto.SetmealDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.service.SetmealService;
@@ -24,6 +25,9 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Resource
     private SetmealDishMapper setmealDishMapper;
+
+    @Resource
+    private CategoryMapper categoryMapper;
     /**
      * 新增套餐（套餐数据内含菜品信息）
      * */
@@ -64,6 +68,10 @@ public class SetmealServiceImpl implements SetmealService {
         BeanUtils.copyProperties(setmeal,setmealVO);
         setmealVO.setSetmealDishes(list);
 
+        //还得根据分类id查询出分类名称
+        String nameById = categoryMapper.getNameById(setmealVO.getCategoryId());
+        setmealVO.setCategoryName(nameById);
+
         return setmealVO;
     }
 
@@ -94,4 +102,7 @@ public class SetmealServiceImpl implements SetmealService {
                 .build();
         setmealMapper.update(setmeal);
     }
+
+
+
 }
