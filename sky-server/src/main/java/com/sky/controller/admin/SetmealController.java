@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -50,4 +51,18 @@ public class SetmealController {
     }
 
 
+    /**
+     * 根据主键id批量删除套餐
+     *
+     * @param ids
+     * @return
+     */
+    @Operation(description = "根据id批量删除套餐")
+    @DeleteMapping
+    public Result deleteBatch(@RequestParam List<Long> ids) {
+        log.info("根据id:{}删除套餐",ids);
+        setmealService.deleteBatch(ids);
+
+        return Result.success();
+    }
 }
