@@ -38,7 +38,9 @@ public class SetmealController {
 
     /**
      * 根据主键id查询套餐信息，需要返回套餐以及套餐菜品关系
-     * */
+     * @param id
+     * @return
+     */
     @GetMapping("{id}")
     @Operation(description = "查询套餐")
     public Result<SetmealVO> getById(@PathVariable @Parameter(description = "套餐id",example = "33") Long id) {
@@ -46,4 +48,6 @@ public class SetmealController {
         SetmealVO setmealVO = setmealService.getById(id);
         return Result.success(setmealVO);
     }
+
+
 }
