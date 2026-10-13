@@ -53,6 +53,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AspectException.class)
     public Result aspectException(AspectException ex) {
         log.error("异常信息：{}", ex.getMessage());
-        return Result.error(ex.getMessage());
+        return Result.error("服务器异常");
     }
 }
