@@ -59,4 +59,11 @@ public interface DishMapper {
      * 根据分类id查询菜品
      * */
     List<Dish> selectByCategoryId(Long categoryId);
+
+    /**
+     * 根据分类id和售卖中的状态来查询
+     * @param d
+     * @return
+     */
+    List<Dish> list(Dish d);
 }
