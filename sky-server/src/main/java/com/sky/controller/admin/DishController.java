@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 //@Tag(name = "菜品管理",description = "菜品管理相关接口")
@@ -35,6 +37,9 @@ public class DishController {
             @RequestBody
             DishDTO dishDTO) {
         log.info("新增菜品：{}",dishDTO);
+        //清理旧缓存
+        removeCache("dish_"+dishDTO.getCategoryId().toString());
+
         dishService.saveWithFlavor(dishDTO);
         return Result.success();
     }
@@ -63,6 +68,11 @@ public class DishController {
     @Operation(description = "菜品批量删除")
     public Result deleteBatch(@RequestParam List<Long> ids){
         log.info("菜品批量删除：{}", ids);
+
+        //清理旧缓存
+        //简单处理，直接删掉所有缓存
+        removeCache("dish_*");
+
         dishService.deleteBatch(ids);//后绪步骤实现
         return Result.success();
     }
@@ -98,6 +108,9 @@ public class DishController {
 
         log.info("修改菜品：{}",dishDTO);
 
+        //删除旧缓存
+        removeCache("dish_"+dishDTO.getCategoryId());
+
         dishService.updateWithFlavor(dishDTO);
 
         return Result.success();
@@ -118,6 +131,13 @@ public class DishController {
                          ) {
 
         log.info("{}号菜品起售停售修改：{}",id,status);
+
+        //删除旧的缓存
+        //其实我觉得删除全部缓存不太好，应该把缓存清理设计到service中
+        //service调用mapper，定向清理
+        //好吧，这样也不好，因为mysql和redis相比，太慢了，直接全删也更快
+        removeCache("dish_*");
+
         dishService.modifyStatusById(id,status);
         return Result.success();
     }
@@ -131,5 +151,19 @@ public class DishController {
         log.info("根据分类id{}查询菜品",categoryId);
         List<Dish> list = dishService.modifyStatusById(categoryId);
         return Result.success(list);
+    }
+
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    /**
+     * 移除redis缓存中缓存的旧数据
+     * @param
+     */
+    private void removeCache(String pattern) {
+
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
     }
 }

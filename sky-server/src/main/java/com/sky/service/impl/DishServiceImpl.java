@@ -19,6 +19,7 @@ import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -191,14 +192,27 @@ public class DishServiceImpl implements DishService {
         return list;
     }
 
+    @Resource
+    private RedisTemplate redisTemplate;
     /**
-     * 条件查询菜品和口味
+     * 条件查询菜品和口味，并采用redis缓存优化用户体验
      * @param dish
      * @return
      */
     public List<DishVO> listWithFlavor(Dish dish) {
-        List<Dish> dishList = dishMapper.list(dish);
 
+        List<Dish> dishList = null;
+
+        Long categoryId = dish.getCategoryId();
+        String key = "dish_" + categoryId;
+        //如果Redis中保存了菜品，直接从缓存中读取
+        List<DishVO> list = (List<DishVO>) redisTemplate.opsForValue().get(key);
+        if(list != null) {
+            return list;
+        }
+        //如果缓存中没有，就从数据库中查询，在封装后缓存至redis中
+        dishList = dishMapper.list(dish);
+        //封装VO
         List<DishVO> dishVOList = new ArrayList<>();
 
         for (Dish d : dishList) {
@@ -211,7 +225,8 @@ public class DishServiceImpl implements DishService {
             dishVO.setFlavors(flavors);
             dishVOList.add(dishVO);
         }
-
+        //缓存至redis中
+        redisTemplate.opsForValue().set(key,dishVOList);
         return dishVOList;
     }
 }
