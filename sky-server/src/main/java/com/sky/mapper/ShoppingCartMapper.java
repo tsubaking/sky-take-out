@@ -9,7 +9,7 @@ import java.util.List;
 public interface ShoppingCartMapper {
 
     @Select("select * from shopping_cart where user_id = #{userId}")
-    public List<ShoppingCart> selectByUserId(Long userId);
+    public ShoppingCart selectByUserId(Long userId);
 
     /**
      * 查询自己的购物车中满足目标条件的
