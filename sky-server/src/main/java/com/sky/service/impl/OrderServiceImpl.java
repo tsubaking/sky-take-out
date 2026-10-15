@@ -36,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderDetailMapper orderDetailMapper;
+
     /**
      * 用户提交订单
      * @param ordersSubmitDTO
@@ -90,6 +91,9 @@ public class OrderServiceImpl implements OrderService {
 
         //插入
         orderDetailMapper.insert(orderDetail);
+
+        //清空购物车（其实放在付款结束后更合理）
+        shoppingCartMapper.deleteCartByUserId(currentId);
 
         //构造VO
         OrderSubmitVO orderSubmitVO = new OrderSubmitVO();
