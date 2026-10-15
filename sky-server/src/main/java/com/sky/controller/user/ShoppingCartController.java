@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.swing.*;
 import java.util.List;
 
 @RestController
@@ -36,11 +38,22 @@ public class ShoppingCartController {
         return Result.success();
     }
 
-
+    /**
+     * 查询购物车
+     * @return
+     */
     @GetMapping("/list")
     @Operation(description = "查询购物车内容")
     public Result<List<ShoppingCart>> list() {
         log.info("查询购物车内容");
         return Result.success(service.list());
+    }
+
+    @DeleteMapping("/clean")
+    @Operation(description = "清空购物车")
+    public Result delete() {
+        log.info("{}用户清空购物车", BaseContext.getCurrentId());
+        service.cleanCart();
+        return Result.success();
     }
 }
