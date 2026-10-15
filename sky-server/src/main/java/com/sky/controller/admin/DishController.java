@@ -104,7 +104,7 @@ public class DishController {
     * */
     @PutMapping
     @Operation(description = "修改菜品信息")
-    public Result update(DishDTO dishDTO) {
+    public Result update(@RequestBody DishDTO dishDTO) {
 
         log.info("修改菜品：{}",dishDTO);
 
