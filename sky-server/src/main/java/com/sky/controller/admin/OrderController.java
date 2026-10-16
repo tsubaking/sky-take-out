@@ -5,12 +5,11 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderStatisticsVO;
+import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -38,4 +37,15 @@ public class OrderController {
         OrderStatisticsVO vo = orderService.getStatistic();
         return Result.success(vo);
     }
+
+
+    @GetMapping("/details/{id}")
+    @Operation(description = "查询订单详情")
+    public Result<OrderVO> getById(@PathVariable("id") Long id) {
+        log.info("查询订单详情，订单id：{}",id);
+        OrderVO byId = orderService.getById(id);
+        return Result.success(byId);
+    }
+
+
 }
