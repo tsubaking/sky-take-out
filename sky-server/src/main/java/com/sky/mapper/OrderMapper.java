@@ -26,4 +26,12 @@ public interface OrderMapper {
     Orders selectById(Long id);
 
     void update(Orders order);
+
+    /**
+     * 根据传入的订单状态，统计数据
+     * @param toBeConfirmed
+     * @return
+     */
+    @Select("select count(*) from orders where status = #{toBeConfirmen}")
+    Integer countStatus(Integer toBeConfirmed);
 }
