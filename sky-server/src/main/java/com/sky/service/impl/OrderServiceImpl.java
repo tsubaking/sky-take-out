@@ -213,4 +213,31 @@ public class OrderServiceImpl implements OrderService {
         //保存到数据库
         shoppingCartMapper.insertBatch(list);
     }
+
+    /**
+     * 管理端根据条件分页查询
+     * @param ordersPageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult adminPageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
+        int page = ordersPageQueryDTO.getPage();
+        int pageSize = ordersPageQueryDTO.getPageSize();
+        //设置并开启分页
+        PageHelper.startPage(page,pageSize);
+        //条件分页查询
+        Page<Orders> orders = orderMapper.selectByCondition(ordersPageQueryDTO);
+        //封装VO结果
+        List<OrderVO> list = new ArrayList<>();
+        for (Orders order : orders) {
+            //查询订单对应的订单详细信息
+            List<OrderDetail> details = orderDetailMapper.selectByOrderId(order.getId());
+
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order,orderVO);
+            orderVO.setOrderDetailList(details);
+            list.add(orderVO);
+        }
+        return new PageResult(orders.getTotal(),list);
+    }
 }

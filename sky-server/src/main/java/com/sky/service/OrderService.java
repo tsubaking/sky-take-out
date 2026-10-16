@@ -16,4 +16,6 @@ public interface OrderService {
     void cancelOrder(Long id);
 
     void repetition(Long id);
+
+    PageResult adminPageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 }
