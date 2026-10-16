@@ -6,6 +6,7 @@ import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -34,4 +35,12 @@ public interface OrderMapper {
      */
     @Select("select count(*) from orders where status = #{toBeConfirmen}")
     Integer countStatus(Integer toBeConfirmed);
+
+    /**
+     * 查找下单时间早于time的
+     * @param time
+     * @return
+     */
+    @Select("select * from orders where order_time < #{time} and status = #{status}")
+    List<Orders> listBeforeTime(LocalDateTime time,int status);
 }
