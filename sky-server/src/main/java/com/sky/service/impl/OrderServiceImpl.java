@@ -262,4 +262,17 @@ public class OrderServiceImpl implements OrderService {
         return orderStatisticsVO;
 
     }
+
+    /**
+     * 商家接单
+     * @param id
+     */
+    @Override
+    public void acceptOrder(Long id) {
+        Orders order = Orders.builder()
+                .id(id)
+                .status(Orders.CONFIRMED)
+                .build();
+        orderMapper.update(order);
+    }
 }

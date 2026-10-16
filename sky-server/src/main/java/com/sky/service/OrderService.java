@@ -22,4 +22,5 @@ public interface OrderService {
 
     OrderStatisticsVO getStatistic();
 
+    void acceptOrder(Long id);
 }

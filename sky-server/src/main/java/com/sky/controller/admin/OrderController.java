@@ -47,5 +47,11 @@ public class OrderController {
         return Result.success(byId);
     }
 
-
+    @PutMapping("/confirm")
+    @Operation(description = "接单")
+    public Result accept(@RequestBody Long id) {
+        log.info("接单，订单id：{}",id);
+        orderService.acceptOrder(id);
+        return Result.success();
+    }
 }
