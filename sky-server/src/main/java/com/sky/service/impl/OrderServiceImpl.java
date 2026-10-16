@@ -1,7 +1,10 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
@@ -13,13 +16,16 @@ import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,8 +67,8 @@ public class OrderServiceImpl implements OrderService {
         }
         //取出购物车信息
         Long currentId = BaseContext.getCurrentId();
-        ShoppingCart shoppingCart = shoppingCartMapper.selectByUserId(currentId);
-        if(shoppingCart == null) {
+        List<ShoppingCart> shoppingCarts = shoppingCartMapper.selectByUserId(currentId);
+        if(shoppingCarts == null || shoppingCarts.size() == 0) {
             throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
         }
         //配送范围这里暂时无法检验
@@ -82,15 +88,17 @@ public class OrderServiceImpl implements OrderService {
         //插入数据
         orderMapper.insert(order);
 
-        //插入订单详细数据（利用回显的订单id和购物车）
-        OrderDetail orderDetail = new OrderDetail();
-        BeanUtils.copyProperties(shoppingCart,orderDetail);
-        //但是id不能采纳
-        orderDetail.setId(null);
-        orderDetail.setOrderId(order.getId());
+        for (ShoppingCart shoppingCart : shoppingCarts) {
+            //插入订单详细数据（利用回显的订单id和购物车）
+            OrderDetail orderDetail = new OrderDetail();
+            BeanUtils.copyProperties(shoppingCart,orderDetail);
+            //但是id不能采纳
+            orderDetail.setId(null);
+            orderDetail.setOrderId(order.getId());
+            //插入
+            orderDetailMapper.insert(orderDetail);
 
-        //插入
-        orderDetailMapper.insert(orderDetail);
+        }
 
         //清空购物车（其实放在付款结束后更合理）
         shoppingCartMapper.deleteCartByUserId(currentId);
@@ -103,5 +111,35 @@ public class OrderServiceImpl implements OrderService {
         orderSubmitVO.setOrderTime(LocalDateTime.now());
 
         return orderSubmitVO;
+    }
+
+    /**
+     * 分页查询订单历史记录（每一条历史记录中需要包含订单detail）
+     * @param ordersPageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
+        int page = ordersPageQueryDTO.getPage();
+        int pageSize = ordersPageQueryDTO.getPageSize();
+        //设置并开启分页
+        PageHelper.startPage(page,pageSize);
+        //条件分页查询
+        Long userId = BaseContext.getCurrentId();
+        ordersPageQueryDTO.setUserId(userId);
+        Page<Orders> orders = orderMapper.selectByCondition(ordersPageQueryDTO);
+        //封装VO结果
+        //OrderVO orderVo = new OrderVO();
+        List<OrderVO> list = new ArrayList<>();
+        for (Orders order : orders) {
+            //查询订单对应的订单详细信息
+            List<OrderDetail> details = orderDetailMapper.selectByOrderId(order.getId());
+
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order,orderVO);
+            orderVO.setOrderDetailList(details);
+            list.add(orderVO);
+        }
+        return new PageResult(orders.getTotal(),list);
     }
 }
