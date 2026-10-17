@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //利用百度地图进行配送范围合法性检验
-        checkOutOfRange(address.getCityName() + address.getDistrictName() + address.getDetail());
+        //checkOutOfRange(address.getCityName() + address.getDistrictName() + address.getDetail());
 
         //构造订单数据
         Orders order = new Orders();
@@ -392,6 +392,29 @@ public class OrderServiceImpl implements OrderService {
         // 更新订单状态,状态转为完成
         orders.setStatus(Orders.COMPLETED);
         orders.setDeliveryTime(LocalDateTime.now());
+
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 直接模拟支付成功
+     * @param orderNumber
+     */
+    @Override
+    public void paySucess(String orderNumber) {
+        // 当前登录用户id
+        Long userId = BaseContext.getCurrentId();
+
+        // 根据订单号查询当前用户的订单
+        Orders ordersDB = orderMapper.getByNumberAndUserId(orderNumber, userId);
+
+        // 根据订单id更新订单的状态、支付方式、支付状态、结账时间
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .status(Orders.TO_BE_CONFIRMED)
+                .payStatus(Orders.PAID)
+                .checkoutTime(LocalDateTime.now())
+                .build();
 
         orderMapper.update(orders);
     }
