@@ -28,7 +28,9 @@ import com.sky.utils.HttpClientUtil;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderDetailMapper orderDetailMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户提交订单
@@ -417,6 +421,14 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+        //使用websocket广播管理端，通知有新的订单
+        Map<Object, Object> map = new HashMap<>();
+        map.put("type",1); //消息类型：1表示来单提醒，2表示催单
+        map.put("orderId",orders.getId());
+        map.put("content","订单号：" + orderNumber);
+        //通过websocket发送
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     /**
