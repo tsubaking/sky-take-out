@@ -88,4 +88,17 @@ public class OrderController {
         orderService.paySucess(ordersPaymentDTO.getOrderNumber());
         return Result.success("支付成功");
     }
+
+    /**
+     * 用户催单
+     * @param id
+     * @return
+     */
+    @GetMapping("/reminder/{id}")
+    @Operation(description = "用户催单")
+    public Result reminder(@PathVariable("id") Long id) {
+        log.info("用户:{}，催单",id);
+        orderService.reminder(id);
+        return Result.success();
+    }
 }
