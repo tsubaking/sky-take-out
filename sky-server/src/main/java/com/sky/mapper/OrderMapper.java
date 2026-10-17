@@ -52,4 +52,7 @@ public interface OrderMapper {
      */
     @Select("select * from orders where number = #{orderNumber} and user_id= #{userId}")
     Orders getByNumberAndUserId(String orderNumber, Long userId);
+
+
+    Double amountSumByDay(LocalDateTime begin, LocalDateTime end, Integer status);
 }
